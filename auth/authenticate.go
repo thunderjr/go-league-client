@@ -5,7 +5,6 @@ import (
 	"log"
 	"regexp"
 	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/abdfnx/gosh"
@@ -17,7 +16,7 @@ type AuthenticationOptions struct {
 }
 
 type Credentials struct {
-	Port        int
+	Port        string
 	Password    string
 	PID         string
 	Certificate string
@@ -64,7 +63,7 @@ func (l *LeagueAuth) Authenticate(ctx context.Context) {
 	}
 
 	l.Credentials.Certificate = RiotCertificate
-	l.Credentials.Port, _ = strconv.Atoi(portRegex.FindStringSubmatch(commandOutput)[1])
+	l.Credentials.Port = portRegex.FindStringSubmatch(commandOutput)[1]
 	l.Credentials.Password = passwordRegex.FindStringSubmatch(commandOutput)[1]
 	l.Credentials.PID = pidRegex.FindStringSubmatch(commandOutput)[1]
 }
