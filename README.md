@@ -1,5 +1,7 @@
 # Go League of Legends Client SDK
 
+Inspired by [league-connect](https://github.com/matsjla/league-connect)
+
 ## Installation
 
 To install the package, run the following command:
