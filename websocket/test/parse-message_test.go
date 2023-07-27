@@ -1,18 +1,20 @@
-package league_websocket
+package league_websocket_test
 
 import (
 	"testing"
+
+	league_websocket "github.com/thunderjr/go-league-client/websocket"
 )
 
 func TestParseMessage(t *testing.T) {
-	expectedEvent := EventResponse{
+	expectedEvent := league_websocket.EventResponse{
 		URI: "/some/uri",
 		Data: map[string]interface{}{
 			"key": "value",
 		},
 	}
 
-	result, err := parseMessage([]byte(`[5, "OnJsonApiEvent", {"uri": "/some/uri", "data": {"key": "value"}}]`))
+	result, err := league_websocket.ParseMessage([]byte(`[5, "OnJsonApiEvent", {"uri": "/some/uri", "data": {"key": "value"}}]`))
 
 	if err != nil {
 		t.Errorf("parseMessage() error = %v", err)

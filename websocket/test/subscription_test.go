@@ -1,21 +1,23 @@
-package league_websocket
+package league_websocket_test
 
 import (
 	"testing"
+
+	league_websocket "github.com/thunderjr/go-league-client/websocket"
 )
 
 func TestSubscribe(t *testing.T) {
-	lws := &LeagueWebSocket{
-		Subscriptions: make(map[string][]EventCallback),
+	lws := &league_websocket.LeagueWebSocket{
+		Subscriptions: make(map[string][]league_websocket.EventCallback),
 	}
 
 	var state int
-	callback := func(response EventResponse) { state++ }
+	callback := func(response league_websocket.EventResponse) { state++ }
 
 	lws.Subscribe("/test/path", callback)
 
 	// Trigger the callback to change the state
-	lws.Subscriptions["/test/path"][0](EventResponse{})
+	lws.Subscriptions["/test/path"][0](league_websocket.EventResponse{})
 	if state != 1 {
 		t.Error("Failed to subscribe to the new path")
 	}
@@ -25,7 +27,7 @@ func TestSubscribe(t *testing.T) {
 
 	// Trigger the callbacks to change the state
 	for _, callback := range lws.Subscriptions["/test/path"] {
-		callback(EventResponse{})
+		callback(league_websocket.EventResponse{})
 	}
 	if state != 3 {
 		t.Error("Failed to subscribe to an existing path")
@@ -33,11 +35,11 @@ func TestSubscribe(t *testing.T) {
 }
 
 func TestUnsubscribe(t *testing.T) {
-	lws := &LeagueWebSocket{
-		Subscriptions: make(map[string][]EventCallback),
+	lws := &league_websocket.LeagueWebSocket{
+		Subscriptions: make(map[string][]league_websocket.EventCallback),
 	}
 
-	lws.Subscriptions["/test/path"] = []EventCallback{func(response EventResponse) {}}
+	lws.Subscriptions["/test/path"] = []league_websocket.EventCallback{func(response league_websocket.EventResponse) {}}
 
 	lws.Unsubscribe("/test/path")
 
@@ -47,8 +49,8 @@ func TestUnsubscribe(t *testing.T) {
 }
 
 func TestUnsubscribeNonExistingPath(t *testing.T) {
-	lws := &LeagueWebSocket{
-		Subscriptions: make(map[string][]EventCallback),
+	lws := &league_websocket.LeagueWebSocket{
+		Subscriptions: make(map[string][]league_websocket.EventCallback),
 	}
 
 	lws.Unsubscribe("/non/existing/path")
