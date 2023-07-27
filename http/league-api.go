@@ -1,32 +1,45 @@
 package league_http
 
 import (
+	"crypto/tls"
 	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/thunderjr/go-league-client/auth"
+	league_auth "github.com/thunderjr/go-league-client/auth"
 )
 
-type LeagueClient struct {
-	credentials *auth.Credentials
+type LeagueHttp struct {
+	credentials *league_auth.Credentials
 	client      *http.Client
 }
 
-func NewLeagueClient(credentials *auth.Credentials) *LeagueClient {
-	return &LeagueClient{
-		client: InitHttp2Client(credentials.Certificate),
-		// client: &http.Client{
-		// 	Transport: &http.Transport{
-		// 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		// 	},
-		// },
-		credentials: credentials,
+type LeagueClientOptions struct {
+	Credentials *league_auth.Credentials
+	UseHttp2    bool
+}
+
+func Init(options LeagueClientOptions) *LeagueHttp {
+	var client *http.Client
+
+	if options.UseHttp2 {
+		client = InitHttp2Client(options.Credentials.Certificate)
+	} else {
+		client = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			},
+		}
+	}
+
+	return &LeagueHttp{
+		credentials: options.Credentials,
+		client:      client,
 	}
 }
 
-func (l *LeagueClient) Get(path string) ([]byte, error) {
+func (l *LeagueHttp) Get(path string) ([]byte, error) {
 	req, err := http.NewRequest("GET", "https://127.0.0.1:"+l.credentials.Port+path, nil)
 	if err != nil {
 		fmt.Println("Error creating HTTP request:", err)
