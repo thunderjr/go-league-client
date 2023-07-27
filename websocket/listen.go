@@ -21,7 +21,7 @@ func (lws *LeagueWebSocket) listen() {
 			}
 		}
 
-		eventResponse, err := parseMessage(message)
+		eventResponse, err := ParseMessage(message)
 		if err != nil {
 			log.Println("[listen] parse event:", err)
 			continue

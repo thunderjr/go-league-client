@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-func parseMessage(message []byte) (EventResponse, error) {
+func ParseMessage(message []byte) (EventResponse, error) {
 	/*
 	 * The websocket message response is a slice with the following (in order):
 	 * 	Ex.: [5, "OnJsonApiEvent", {"uri": "/some/uri", "data": {"key": "value"}}]
