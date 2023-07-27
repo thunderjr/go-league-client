@@ -1,4 +1,4 @@
-package auth
+package league_auth
 
 import (
 	"context"
@@ -9,6 +9,8 @@ import (
 
 	"github.com/abdfnx/gosh"
 )
+
+var DEFAULT_PROCESS_NAME = "LeagueClientUx"
 
 type AuthenticationOptions struct {
 	AwaitConnection bool
@@ -21,12 +23,17 @@ type Credentials struct {
 	PID         string
 	Certificate string
 }
+
 type LeagueAuth struct {
 	AuthenticationOptions
 	Credentials *Credentials
 }
 
-var DEFAULT_PROCESS_NAME = "LeagueClientUx"
+func Init(options AuthenticationOptions) *LeagueAuth {
+	return &LeagueAuth{
+		AuthenticationOptions: options,
+	}
+}
 
 func (l *LeagueAuth) Authenticate(ctx context.Context) {
 	_, cancel := context.WithTimeout(ctx, l.Timeout)
