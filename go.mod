@@ -7,4 +7,7 @@ require (
 	golang.org/x/net v0.12.0
 )
 
-require golang.org/x/text v0.11.0 // indirect
+require (
+	github.com/gorilla/websocket v1.5.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
+)
