@@ -7,6 +7,7 @@ import (
 func parseMessage(message []byte) (EventResponse, error) {
 	/*
 	 * The websocket message response is a slice with the following (in order):
+	 * 	Ex.: [5, "OnJsonApiEvent", {"uri": "/some/uri", "data": {"key": "value"}}]
 	 * 	- EventType int
 	 * 	- EventName string (here it's always == 'OnJsonApiEvent')
 	 * 	- Data map[string]interface{} (actual useful data)
