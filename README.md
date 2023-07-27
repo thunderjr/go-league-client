@@ -1,4 +1,4 @@
-# Go League Client
+# Go League of Legends Client SDK
 
 ## Installation
 
