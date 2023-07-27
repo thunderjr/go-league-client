@@ -1,4 +1,4 @@
-package auth
+package league_auth
 
 var RiotCertificate = `
 -----BEGIN CERTIFICATE-----
