@@ -2,6 +2,16 @@
 
 Inspired by [league-connect](https://github.com/matsjla/league-connect)
 
+## Getting Started
+
+[Official League Client API Documentation](https://developer.riotgames.com/docs/lol#league-client-api)
+
+[HTTP and HTTP2 (HextechDocs)](https://hextechdocs.dev/getting-started-with-the-lcu-api/)
+
+[WebSocket (HextechDocs)](https://hextechdocs.dev/getting-started-with-the-lcu-websocket/)
+
+[League Client API FAQ](https://hextechdocs.dev/lcu-api-faq/)
+
 ## Installation
 
 To install the package, run the following command:
