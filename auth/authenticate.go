@@ -43,9 +43,9 @@ func (l *LeagueAuth) Authenticate(ctx context.Context) {
 		l.Credentials = &Credentials{}
 	}
 
-	portRegex, _ := regexp.Compile(`--app-port=([0-9]+)(?: *"|--)`)
-	passwordRegex, _ := regexp.Compile(`--remoting-auth-token=(.+?)(?: *"|--)`)
-	pidRegex, _ := regexp.Compile(`--app-pid=([0-9]+)(?: *"|--)`)
+	portRegex, _ := regexp.Compile(`--app-port=([0-9]+)(?:\s|"|$)`)
+	passwordRegex, _ := regexp.Compile(`--remoting-auth-token=(.+?)(?:\s|"|$)`)
+	pidRegex, _ := regexp.Compile(`--app-pid=([0-9]+)(?:\s|"|$)`)
 
 	isWindows := runtime.GOOS == "windows"
 
