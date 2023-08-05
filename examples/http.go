@@ -29,12 +29,12 @@ func LeagueHttpExample() {
 
 	// Make a GET request to retrieve the current summoner data
 	endpoint := "/lol-summoner/v1/current-summoner"
-	body, err := httpClient.Get(endpoint)
+	body, statusCode, err := httpClient.Get(endpoint)
 	if err != nil {
 		log.Fatalln("Failed to make GET request:", err)
 	}
 
-	fmt.Println("Current Summoner Data:")
+	fmt.Printf("[%d] Current Summoner Data: \n", statusCode)
 	fmt.Println(string(body))
 
 }
