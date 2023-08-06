@@ -38,6 +38,10 @@ func (l *LeagueHttp) Get(path string) ([]byte, int, error) {
 	return l.makeRequest("GET", path, nil)
 }
 
+func (l *LeagueHttp) Post(path string, body io.Reader) ([]byte, int, error) {
+	return l.makeRequest("POST", path, body)
+}
+
 func (l *LeagueHttp) Patch(path string, body io.Reader) ([]byte, int, error) {
 	return l.makeRequest("PATCH", path, body)
 }
