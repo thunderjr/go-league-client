@@ -18,6 +18,10 @@ type LeagueClientOptions struct {
 }
 
 func Init(options LeagueClientOptions) *LeagueHttp {
+	if options.Credentials == nil {
+		panic("credentials are required")
+	}
+
 	var client *http.Client
 
 	if options.UseHttp2 {
