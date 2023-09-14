@@ -1,25 +1,20 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"time"
 
 	league_auth "github.com/thunderjr/go-league-client/auth"
 	league_http "github.com/thunderjr/go-league-client/http"
 )
 
 func LeagueHttpExample() {
-	ctx := context.Background()
-
 	// Initialize and authenticate the League of Legends client
 	auth := league_auth.Init(league_auth.AuthenticationOptions{
 		AwaitConnection: true,
-		Timeout:         time.Minute,
 	})
 
-	auth.Authenticate(ctx)
+	auth.Authenticate()
 
 	// Initialize the League of Legends HTTP client
 	httpClient := league_http.Init(league_http.LeagueClientOptions{

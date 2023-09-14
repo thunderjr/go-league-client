@@ -1,7 +1,6 @@
 package league_auth
 
 import (
-	"context"
 	"log"
 	"regexp"
 	"runtime"
@@ -12,11 +11,6 @@ import (
 
 var DEFAULT_PROCESS_NAME = "LeagueClientUx"
 
-type AuthenticationOptions struct {
-	AwaitConnection bool
-	Timeout         time.Duration
-}
-
 type Credentials struct {
 	Port        string
 	Password    string
@@ -24,21 +18,24 @@ type Credentials struct {
 	Certificate string
 }
 
+type AuthenticationOptions struct {
+	AwaitConnection bool
+}
+
 type LeagueAuth struct {
-	AuthenticationOptions
-	Credentials *Credentials
+	AwaitConnection bool
+	AuthSuccess     chan bool
+	Credentials     *Credentials
 }
 
 func Init(options AuthenticationOptions) *LeagueAuth {
 	return &LeagueAuth{
-		AuthenticationOptions: options,
+		AwaitConnection: options.AwaitConnection,
+		AuthSuccess:     make(chan bool),
 	}
 }
 
-func (l *LeagueAuth) Authenticate(ctx context.Context) {
-	_, cancel := context.WithTimeout(ctx, l.Timeout)
-	defer cancel()
-
+func (l *LeagueAuth) Authenticate() {
 	if l.Credentials == nil {
 		l.Credentials = &Credentials{}
 	}
@@ -57,20 +54,31 @@ func (l *LeagueAuth) Authenticate(ctx context.Context) {
 		getArgsCommand = "ps x -o args | grep '" + DEFAULT_PROCESS_NAME + "'"
 	}
 
-	err, rawOutput, _ := gosh.RunOutput(getArgsCommand)
-	if err != nil {
-		log.Println("Error getting League Client credentials")
-		log.Fatalln(err)
-	}
+	var commandOutput string
+	for {
+		err, rawOutput, _ := gosh.RunOutput(getArgsCommand)
+		if err != nil {
+			log.Println("Error getting League Client credentials")
+			log.Fatalln(err)
+		}
 
-	commandOutput := regexp.MustCompile("/\n|\r/g").ReplaceAllString(rawOutput, "")
+		commandOutput = regexp.MustCompile("/\n|\r/g").ReplaceAllString(rawOutput, "")
+		if len(commandOutput) != 0 || !l.AwaitConnection {
+			break
+		}
+
+		time.Sleep(1 * time.Second)
+	}
 
 	if len(commandOutput) == 0 {
 		log.Fatalln("LeagueClient not found")
+		return
 	}
 
 	l.Credentials.Certificate = RiotCertificate
 	l.Credentials.Port = portRegex.FindStringSubmatch(commandOutput)[1]
 	l.Credentials.Password = passwordRegex.FindStringSubmatch(commandOutput)[1]
 	l.Credentials.PID = pidRegex.FindStringSubmatch(commandOutput)[1]
+
+	l.AuthSuccess <- true
 }

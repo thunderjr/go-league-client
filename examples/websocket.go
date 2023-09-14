@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -10,16 +9,13 @@ import (
 )
 
 func LeagueWebSocketExample() {
-	ctx := context.Background()
-
 	// Initialize the league auth struct
 	auth := league_auth.Init(league_auth.AuthenticationOptions{
 		AwaitConnection: true,
-		Timeout:         time.Minute,
 	})
 
 	// Get the current local server credentials from leagueClient proccess
-	auth.Authenticate(ctx)
+	auth.Authenticate()
 
 	// Define your connection options
 	options := &league_websocket.ConnectionOptions{
