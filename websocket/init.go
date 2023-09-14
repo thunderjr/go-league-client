@@ -62,6 +62,10 @@ func (lws *LeagueWebSocket) subscribeToJsonEvents() error {
 }
 
 func Init(options *ConnectionOptions) (*LeagueWebSocket, error) {
+	if options.Credentials == nil {
+		return nil, errors.New("credentials are required")
+	}
+
 	var internalRetryCount = 0
 
 	var tlsConfig *tls.Config

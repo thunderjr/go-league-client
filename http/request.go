@@ -8,6 +8,10 @@ import (
 )
 
 func (l *LeagueHttp) makeRequest(method, path string, body io.Reader) ([]byte, int, error) {
+	if l.credentials == nil {
+		return nil, 0, fmt.Errorf("league credentials not set")
+	}
+
 	req, err := http.NewRequest(method, "https://127.0.0.1:"+l.credentials.Port+path, body)
 	if err != nil {
 		fmt.Println("Error creating HTTP request:", err)
