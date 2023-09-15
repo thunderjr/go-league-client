@@ -36,10 +36,6 @@ func Init(options AuthenticationOptions) *LeagueAuth {
 }
 
 func (l *LeagueAuth) Authenticate() {
-	if l.Credentials == nil {
-		l.Credentials = &Credentials{}
-	}
-
 	portRegex, _ := regexp.Compile(`--app-port=([0-9]+)(?:\s|"|$)`)
 	passwordRegex, _ := regexp.Compile(`--remoting-auth-token=(.+?)(?:\s|"|$)`)
 	pidRegex, _ := regexp.Compile(`--app-pid=([0-9]+)(?:\s|"|$)`)
@@ -73,6 +69,10 @@ func (l *LeagueAuth) Authenticate() {
 	if len(commandOutput) == 0 {
 		log.Fatalln("LeagueClient not found")
 		return
+	}
+
+	if l.Credentials == nil {
+		l.Credentials = &Credentials{}
 	}
 
 	l.Credentials.Certificate = RiotCertificate
