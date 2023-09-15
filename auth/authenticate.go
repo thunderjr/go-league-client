@@ -20,18 +20,24 @@ type Credentials struct {
 
 type AuthenticationOptions struct {
 	AwaitConnection bool
+	PoolInterval    *time.Duration
 }
 
 type LeagueAuth struct {
-	AwaitConnection bool
-	AuthSuccess     chan bool
-	Credentials     *Credentials
+	AuthenticationOptions
+	AuthSuccess chan bool
+	Credentials *Credentials
 }
 
 func Init(options AuthenticationOptions) *LeagueAuth {
+	if options.PoolInterval == nil {
+		options.PoolInterval = new(time.Duration)
+		*options.PoolInterval = 5 * time.Second
+	}
+
 	return &LeagueAuth{
-		AwaitConnection: options.AwaitConnection,
-		AuthSuccess:     make(chan bool),
+		AuthSuccess:           make(chan bool),
+		AuthenticationOptions: options,
 	}
 }
 
@@ -63,7 +69,7 @@ func (l *LeagueAuth) Authenticate() {
 			break
 		}
 
-		time.Sleep(1 * time.Second)
+		time.Sleep(*l.AuthenticationOptions.PoolInterval)
 	}
 
 	if len(commandOutput) == 0 {
