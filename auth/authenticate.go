@@ -2,6 +2,7 @@ package league_auth
 
 import (
 	"log"
+	"os/exec"
 	"regexp"
 	"runtime"
 	"time"
@@ -53,13 +54,17 @@ func (l *LeagueAuth) Authenticate() {
 	if isWindows {
 		getArgsCommand = "Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name LIKE '" + DEFAULT_PROCESS_NAME + ".exe'\" | Select-Object -ExpandProperty CommandLine"
 	} else {
-		getArgsCommand = "ps x -o args | grep '" + DEFAULT_PROCESS_NAME + "'"
+		getArgsCommand = "ps x -o args | grep '" + DEFAULT_PROCESS_NAME + "' | grep -v grep"
 	}
 
 	var commandOutput string
 	for {
 		err, rawOutput, _ := gosh.RunOutput(getArgsCommand)
 		if err != nil {
+			if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
+				continue
+			}
+
 			log.Println("Error getting League Client credentials")
 			log.Fatalln(err)
 		}
